@@ -1,0 +1,16 @@
+﻿Numpy vs Python:
+	https://webcourses.ucf.edu/courses/1249560/pages/python-lists-vs-numpy-arrays-what-is-the-difference
+	
+Numpy:
+	https://docs.scipy.org/doc/numpy/user/whatisnumpy.html
+	https://www.geeksforgeeks.org/numpy-in-python-set-1-introduction/
+	https://www.scipy.org/scipylib/faq.html#what-advantages-do-numpy-arrays-offer-over-nested-python-lists
+
+	http://cs231n.github.io/python-numpy-tutorial/
+		- Matlab -- Numpy
+			https://docs.scipy.org/doc/numpy/user/numpy-for-matlab-users.html
+	- NumPy arrays have a fixed size at creation
+	- Two of NumPy’s features which are the basis of much of its power: vectorization and broadcasting.
+		- vectorization :  Absence of a any explicit looping, indexing, etc. in the code. 
+				- Happening "behind the scenes" in optimized, pre-compiled C code.
+		- broadcasting : implicit element-by-element behavior of operations
