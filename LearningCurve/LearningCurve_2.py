@@ -10,7 +10,9 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.svm import SVC
+import sklearn
 
+print(sklearn.__version__)
 
 def plot_learning_curve(train_sizes, train_scores_mean, validation_scores_mean, name):
 
@@ -20,7 +22,7 @@ def plot_learning_curve(train_sizes, train_scores_mean, validation_scores_mean, 
 	plt.ylabel('MSE', fontsize = 14)
 	plt.xlabel('Training set size', fontsize = 14)
 	title = 'Learning curves for a ' + name + ' model'
-	plt.title(title, fontsize = 18, y=1.00)
+	plt.title(title, fontsize = 12, y=1.00)
 	plt.legend()
 	plt.ylim(0,40)
 
@@ -51,13 +53,14 @@ target = 'PE'
 plt.figure(figsize=(16,5))
 
 plt.subplot(2,2,1)
-learning_curve_ghaida(RandomForestRegressor(),electricity, features, target, train_sizes, 5)
+learning_curve_ghaida(RandomForestRegressor(n_estimators=10),electricity, features, target, train_sizes, 5)
 
 plt.subplot(2,2,2)
 learning_curve_ghaida(LinearRegression(),electricity, features, target, train_sizes, 5)
 
 plt.subplot(2,2,3)
-learning_curve_ghaida(RandomForestRegressor(max_leaf_nodes = 350),electricity, features, target, train_sizes, 5)
+learning_curve_ghaida(RandomForestRegressor(n_estimators=10,max_leaf_nodes = 350),electricity, features, target, train_sizes, 5)
+
 
 
 """
