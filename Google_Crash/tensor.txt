@@ -1,0 +1,9 @@
+https://www.tensorflow.org/guide/datasets
+
+https://www.tensorflow.org/api_docs/python/tf/estimator/LinearRegressor
+
+https://www.tensorflow.org/api_docs/python/tf/data/Dataset#repeat
+
+
+
+https://sites.google.com/view/ghaida-ee-cse
