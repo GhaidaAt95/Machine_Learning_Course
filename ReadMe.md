@@ -6,3 +6,5 @@
 | Model evaluation, model selection, and algorithm selection in machine learning | [Link](https://sebastianraschka.com/blog/2016/model-evaluation-selection-part3.html)              | 
 | Understanding the Bias-Variance Tradeoff |[Link](http://scott.fortmann-roe.com/docs/BiasVariance.html)               | 
 | Hyperparameter Optimization in Machine Learning Models |[Link](https://www.datacamp.com/community/tutorials/parameter-optimization-machine-learning-models)               | 
+| Differences between L1 and L2 as Loss Function and Regularization |[Link](http://www.chioka.in/differences-between-l1-and-l2-as-loss-function-and-regularization/)               | 
+
