@@ -9,3 +9,10 @@
 | Machine Learning at UBC 2012 Playlist |[Link](https://www.youtube.com/playlist?list=PLE6Wd9FR--Ecf_5nCbnSQMHqORpiChfJf) | 
 | A Complete Tutorial on Ridge and Lasso Regression in Python |[Link](https://www.analyticsvidhya.com/blog/2016/01/complete-tutorial-ridge-lasso-regression-python/#one) | 
 | Ensemble Methods    | [Link](https://blog.statsbot.co/ensemble-learning-d1dcd548e936) |
+
+
+**Great Python Modules Resources**
+
+| **Module**  |  **Subject**                             | **Link**      | 
+| ----------- | ---------------------------------------- |:-------------:| 
+|   Pandas    | Sparse data structures     | [Link](https://pandas.pydata.org/pandas-docs/stable/sparse.html) |
