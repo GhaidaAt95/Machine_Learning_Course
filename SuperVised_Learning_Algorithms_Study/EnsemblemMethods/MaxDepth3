@@ -1,0 +1,33 @@
+digraph Tree {
+node [shape=box, style="filled, rounded", color="black", fontname=helvetica] ;
+edge [fontname=helvetica] ;
+0 [label="transaction_amt <= 101.5\nsamples = 100.0%\nvalue = [0.763, 0.237]\nclass = D", fillcolor="#e58139b0"] ;
+1 [label="rpt_tp_YE <= 0.5\n54.5%\n[0.885, 0.115]\nD", fillcolor="#e58139de"] ;
+0 -> 1 [labeldistance=2.5, labelangle=45, headlabel="True"] ;
+2 [label="rpt_tp_Q3 <= 0.5\n50.5%\n[0.909, 0.091]\nD", fillcolor="#e58139e6"] ;
+1 -> 2 ;
+3 [label="47.3%\n[0.926, 0.074]\nD", fillcolor="#e58139eb"] ;
+2 -> 3 ;
+4 [label="3.2%\n[0.658, 0.342]\nD", fillcolor="#e581397b"] ;
+2 -> 4 ;
+5 [label="state_TX <= 0.5\n4.0%\n[0.579, 0.421]\nD", fillcolor="#e5813946"] ;
+1 -> 5 ;
+6 [label="3.6%\n[0.64, 0.36]\nD", fillcolor="#e5813970"] ;
+5 -> 6 ;
+7 [label="0.5%\n[0.125, 0.875]\nR", fillcolor="#399de5db"] ;
+5 -> 7 ;
+8 [label="transaction_tp_15 <= 0.5\n45.5%\n[0.618, 0.382]\nD", fillcolor="#e5813961"] ;
+0 -> 8 [labeldistance=2.5, labelangle=-45, headlabel="False"] ;
+9 [label="cycle <= 2013.0\n5.2%\n[0.969, 0.031]\nD", fillcolor="#e58139f7"] ;
+8 -> 9 ;
+10 [label="1.4%\n[0.882, 0.118]\nD", fillcolor="#e58139dd"] ;
+9 -> 10 ;
+11 [label="3.8%\n[1.0, 0.0]\nD", fillcolor="#e58139ff"] ;
+9 -> 11 ;
+12 [label="state_TX <= 0.5\n40.3%\n[0.573, 0.427]\nD", fillcolor="#e5813941"] ;
+8 -> 12 ;
+13 [label="35.9%\n[0.609, 0.391]\nD", fillcolor="#e581395b"] ;
+12 -> 13 ;
+14 [label="4.4%\n[0.276, 0.724]\nR", fillcolor="#399de59e"] ;
+12 -> 14 ;
+}

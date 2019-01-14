@@ -90,6 +90,8 @@ def Learning_Curve_Train(randomize=False):
 		plot_learning_curve(train_sizes, train_scores_mean, validation_scores_mean,name="Shuffle On")
 	else:
 		plot_learning_curve(train_sizes, train_scores_mean, validation_scores_mean)
+
+
 Learning_Curve_Train()
 
 Notice =\

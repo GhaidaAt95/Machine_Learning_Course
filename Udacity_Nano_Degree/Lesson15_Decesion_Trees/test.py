@@ -10,4 +10,4 @@ df = pd.DataFrame({
     'X':[5,3,4,5,5,9]
 })
 print(df)
-print(pd.get_dummies(df.Age))
+print(pd.get_dummies(df))

@@ -1,0 +1,9 @@
+digraph Tree {
+node [shape=box, style="filled, rounded", color="black", fontname=helvetica] ;
+edge [fontname=helvetica] ;
+0 [label="transaction_amt <= 101.5\nsamples = 100.0%\nvalue = [0.763, 0.237]\nclass = D", fillcolor="#e58139b0"] ;
+1 [label="54.5%\n[0.885, 0.115]\nD", fillcolor="#e58139de"] ;
+0 -> 1 [labeldistance=2.5, labelangle=45, headlabel="True"] ;
+2 [label="45.5%\n[0.618, 0.382]\nD", fillcolor="#e5813961"] ;
+0 -> 2 [labeldistance=2.5, labelangle=-45, headlabel="False"] ;
+}
