@@ -15,6 +15,7 @@ from sklearn.kernel_approximation import RBFSampler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import roc_auc_score
 from sklearn.base import clone
+from sklearn.model_selection import KFold
 '''
     * Base learners take the orginal input anf generate a set of predictions
     * Original data set ordered as a matrix X of shape (n_samples, n_features)
@@ -118,6 +119,9 @@ def predict_base_learners(pred_base_learners, inp, verbos=True):
     return P
 
 P_base = predict_base_learners(base_learners, xpred_base)
+print("*"*70)
+print("Predictions shape : {}".format(P_base.shape))
+print("*"*70)
 meta_learner.fit(P_base, ypred_base)
 
 def ensemble_predict(base_learners, meta_learner, inp, verbose=True):
@@ -134,6 +138,7 @@ print("Ensemble ROC-AUC score: %.3f"% roc_auc_score(ytest, P))
 def stacking(base_learners, meta_learner, X,y, generator):
     # Train final base learners for test time
     print("Fitting final base learners...",end="")
+    #Final Base learners are trained on all data
     train_base_learners(base_learners,X,y,verbose=False)
     print("Done")
 
@@ -143,7 +148,9 @@ def stacking(base_learners, meta_learner, X,y, generator):
     cv_preds, cv_y = [], []
 
     for i, (train_idx, test_idx) in enumerate(generator.split(X)):
-
+        print('*'*70)
+        print("split {}".format(i))
+        print('*'*70)fo
         fold_xtrain, fold_ytrain = X[train_idx, :], y[train_idx]
         fold_xtest, fold_ytest = X[test_idx,:], y[test_idx]
 
@@ -170,6 +177,21 @@ def stacking(base_learners, meta_learner, X,y, generator):
     print("Done")
 
     return base_learners, meta_learner
+
+# clone: constructs a new estimator with the same parameters
+#        It yields a new estimator with the same parameters that has not been fit on any data
+cv_base_learners, cv_meta_learner = stacking(
+    get_models(), clone(meta_learner), xtrain.values, ytrain.values, KFold(n_splits=2))
+
+'''
+    * Kfold provides train/test indices to split data in train/test sets
+    * split dataset into k consecutive folds (without shuffling is the default)
+
+'''
+
+P_pred, p = ensemble_predict(cv_base_learners, cv_meta_learner, xtest, verbose=False)
+print("\nEnsemble ROC-AUC score: %.3f" % roc_auc_score(ytest, p))
+
 
 
 
