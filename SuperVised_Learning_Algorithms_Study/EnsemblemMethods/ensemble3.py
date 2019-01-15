@@ -16,6 +16,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import roc_auc_score
 from sklearn.base import clone
 from sklearn.model_selection import KFold
+
 '''
     * Base learners take the orginal input anf generate a set of predictions
     * Original data set ordered as a matrix X of shape (n_samples, n_features)
@@ -148,9 +149,6 @@ def stacking(base_learners, meta_learner, X,y, generator):
     cv_preds, cv_y = [], []
 
     for i, (train_idx, test_idx) in enumerate(generator.split(X)):
-        print('*'*70)
-        print("split {}".format(i))
-        print('*'*70)fo
         fold_xtrain, fold_ytrain = X[train_idx, :], y[train_idx]
         fold_xtest, fold_ytest = X[test_idx,:], y[test_idx]
 
@@ -187,10 +185,14 @@ cv_base_learners, cv_meta_learner = stacking(
     * Kfold provides train/test indices to split data in train/test sets
     * split dataset into k consecutive folds (without shuffling is the default)
 
+    * Basic difference between blending and stacking --> Stacking allows both 
+        Base learners and meta learner to train on the full data set
 '''
 
 P_pred, p = ensemble_predict(cv_base_learners, cv_meta_learner, xtest, verbose=False)
 print("\nEnsemble ROC-AUC score: %.3f" % roc_auc_score(ytest, p))
+
+####### Instead you can use a built in superLearner
 
 
 
