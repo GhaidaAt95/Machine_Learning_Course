@@ -11,7 +11,7 @@
 | 7  | Ensemble Methods    | [Link](https://blog.statsbot.co/ensemble-learning-d1dcd548e936) |
 | 8  | Great Explanation Ensemble Methods (Error correlation ...) | [Link](http://flennerhag.com/2017-04-18-introduction-to-ensembles/) |
 | 9  | Visualizing machine learning one concept at a time Blog  |  [link](http://jalammar.github.io/) |
-<td colspan=3> Unsupervised         
+| 10 | Visualizing K-Means Clustering | [link](https://www.naftaliharris.com/blog/visualizing-k-means-clustering/)|     
 
 
 **Great Python Modules Resources**
