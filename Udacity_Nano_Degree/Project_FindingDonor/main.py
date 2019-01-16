@@ -1,3 +1,6 @@
+import warnings
+import sklearn.exceptions
+warnings.filterwarnings("ignore", category=sklearn.exceptions.UndefinedMetricWarning)
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -7,11 +10,17 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import fbeta_score, accuracy_score
 from sklearn.naive_bayes import GaussianNB
-from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import make_scorer, roc_curve, auc
+from matplotlib.legend_handler import HandlerLine2D
 '''
     # Goal: Construct a model that accurately predicts whether an individual makes more than $50,000
 '''
+
+SEED = 100
+np.random.seed(SEED)
 
 def print_section(printthis="",title=None):
     print('*'*100)
@@ -189,13 +198,13 @@ def train_predict(learner, sample_size, X_train, y_train, X_test, y_test):
     results = {}
 
     start = time()
-    learner.fit(X_train[:sample_size],y_train[:sample_size])
+    learner = learner.fit(X_train[:sample_size],y_train[:sample_size])
     end = time()
 
     results['train_time'] = end - start
 
     start = time()
-    predictions_test = learner.predict(X_test[:sample_size])
+    predictions_test = learner.predict(X_test)
     predictions_train = learner.predict(X_train[:sample_size])
     end = time()
 
@@ -203,24 +212,26 @@ def train_predict(learner, sample_size, X_train, y_train, X_test, y_test):
 
     results['acc_train'] = accuracy_score(y_train[:sample_size],predictions_train)
     
-    results['acc_test'] = accuracy_score(y_test[:sample_size],predictions_test)
+    results['acc_test'] = accuracy_score(y_test,predictions_test)
 
     results['f_train'] = fbeta_score(y_train[:sample_size],predictions_train,beta=0.5)
         
-    results['f_test'] =  fbeta_score(y_test[:sample_size],predictions_test,beta=0.5)
+    results['f_test'] =  fbeta_score(y_test,predictions_test,beta=0.5)
        
     print("{} trained on {} samples.".format(learner.__class__.__name__, sample_size))
         
     return results
 
-clf_A = RandomForestClassifier(n_estimators=10)
-clf_B = GaussianNB()
-clf_C = AdaBoostClassifier(base_estimator=DecisionTreeClassifier(max_depth=5),n_estimators=4)
+clf_A = GaussianNB()
+clf_B = RandomForestClassifier(random_state=42)
+clf_C = AdaBoostClassifier(random_state=42)
 
 samples_100 = len(y_train)
-samples_10 = int(samples_100 * 0.1)
-samples_1 = int(samples_100 * 0.001)
+samples_10 = int( round( samples_100 * 0.1 ) ) 
+samples_1 =  int( round( samples_100 / 100 ) )   
+
 print("1) {} 2) {} 3) {}".format(samples_100,samples_10,samples_1))
+
 # Collect results on the learners
 results = {}
 for clf in [clf_A, clf_B, clf_C]:
@@ -231,4 +242,166 @@ for clf in [clf_A, clf_B, clf_C]:
 
 # Run metrics visualization for the three supervised learning models chosen
 vs.evaluate(results, accuracy, f_score)
-plt.show()
+
+
+for i in results.items():
+    print(i[0])
+    print(pd.DataFrame(i[1]).rename(columns={0:'1%', 1:'10%', 2:'100%'}))
+
+def test_AdaBoost():
+    clf = AdaBoostClassifier(random_state=42)
+
+    # TODO: Create the parameters list you wish to tune
+    parameters = {'n_estimators':[25,50,75], 
+                'learning_rate':[0.2, 0.6, 1.]
+                }
+
+    scorer = make_scorer(fbeta_score, beta=0.5)
+
+    grid_obj = GridSearchCV(clf, parameters, scoring=scorer, cv=3)
+
+    print("Fitting Grid...",end=" ",flush=False)
+    start = time()
+    grid_fit = grid_obj.fit(X_train, y_train)
+    end = time()
+    print("Done in {} seconds".format(end-start))
+
+    best_clf = grid_fit.best_estimator_
+    print(grid_fit.best_params_)
+
+    predictions = (clf.fit(X_train, y_train)).predict(X_test)
+
+    best_predictions = best_clf.predict(X_test)
+
+    print("HERE-------------------------------------------5")
+    Info = '''Unoptimized model
+    ------ Accuracy score on testing data: {:.4f}
+        F-score on testing data: {:.4f}
+
+        Optimized Model
+    ------ Final Accuracy score on the testing data: {:.4f}
+        Final F-score on the testing data : {:.4f} 
+    '''.format(accuracy_score(y_test, predictions), fbeta_score(y_test, predictions, beta=0.5),
+            accuracy_score(y_test, best_predictions), fbeta_score(y_test, best_predictions, beta=0.5))
+    print_section(Info)
+
+def test_RandomForest():
+    clf = RandomForestClassifier()
+
+    parameters = {'n_estimators':list(np.linspace(1,32,32,  dtype=int)), 
+                  'max_depth':list(np.linspace(1,5,5))}
+
+    scorer = make_scorer(fbeta_score, beta=0.5)
+    print("HERE-------------------------------------------1")
+
+    grid_obj = GridSearchCV(clf, parameters, scoring=scorer, cv=3)
+    print("HERE-------------------------------------------2")
+    warnings.filterwarnings("ignore", category=sklearn.exceptions.UndefinedMetricWarning)
+    print("Fitting Gid....",end=" ",flush=False)
+    start = time()
+    grid_fit = grid_obj.fit(X_train, y_train)
+    end = time()
+    print("Done in {} seconds".format(end-start))
+    print("HERE-------------------------------------------3")
+
+    best_clf = grid_fit.best_estimator_
+    print(grid_fit.best_params_)
+    
+    print("HERE-------------------------------------------4")
+    predictions = (clf.fit(X_train, y_train)).predict(X_test)
+
+    best_predictions = best_clf.predict(X_test)
+
+    print("HERE-------------------------------------------5")
+    Info = '''Unoptimized model
+    ------ Accuracy score on testing data: {:.4f}
+        F-score on testing data: {:.4f}
+
+        Optimized Model
+    ------ Final Accuracy score on the testing data: {:.4f}
+        Final F-score on the testing data : {:.4f} 
+    '''.format(accuracy_score(y_test, predictions), fbeta_score(y_test, predictions, beta=0.5),
+            accuracy_score(y_test, best_predictions), fbeta_score(y_test, best_predictions, beta=0.5))
+    print_section(Info)
+
+def learning_curve_parameters_RF(parameter):
+    # ref: https://medium.com/all-things-ai/in-depth-parameter-tuning-for-random-forest-d67bb7e920d
+    plt.figure()
+    train_results = []
+    test_results = []
+    name = list(parameter.keys())[0]
+    for i in parameter[name]:
+        rf = RandomForestClassifier()
+        temp = {name : i}
+        rf.set_params(**temp)
+        rf.fit(X_train, y_train)
+        train_pred = rf.predict(X_train)
+        false_positive_rate, true_positive_rate, thresholds = roc_curve(y_train, train_pred)
+        roc_auc = auc(false_positive_rate, true_positive_rate)
+        train_results.append(roc_auc)
+        y_pred = rf.predict(X_test)
+        false_positive_rate, true_positive_rate, thresholds = roc_curve(y_test, y_pred)
+        roc_auc = auc(false_positive_rate, true_positive_rate)
+        test_results.append(roc_auc)          
+
+    line1, = plt.plot(parameter[name], train_results, 'b', label="Train AUC")
+    line2, = plt.plot(parameter[name], test_results, 'r', label="Test AUC")
+    plt.legend(handler_map={line1: HandlerLine2D(numpoints=2)})
+    plt.ylabel('AUC score')
+    plt.xlabel(list(parameter.keys())[0])
+
+def learning_curve_parameters_AdaBoost(parameter):
+    # ref: https://medium.com/all-things-ai/in-depth-parameter-tuning-for-random-forest-d67bb7e920d
+    plt.figure()
+    train_results = []
+    test_results = []
+    name = list(parameter.keys())[0]
+    for i in parameter[name]:
+        ad = AdaBoostClassifier(base_estimator=DecisionTreeClassifier())
+        temp = {name : i}
+        ad.set_params(**temp)
+        ad.fit(X_train, y_train)
+        train_pred = ad.predict(X_train)
+        false_positive_rate, true_positive_rate, thresholds = roc_curve(y_train, train_pred)
+        roc_auc = auc(false_positive_rate, true_positive_rate)
+        train_results.append(roc_auc)
+        y_pred = ad.predict(X_test)
+        false_positive_rate, true_positive_rate, thresholds = roc_curve(y_test, y_pred)
+        roc_auc = auc(false_positive_rate, true_positive_rate)
+        test_results.append(roc_auc)          
+
+    line1, = plt.plot(parameter[name], train_results, 'b', label="Train AUC")
+    line2, = plt.plot(parameter[name], test_results, 'r', label="Test AUC")
+    plt.legend(handler_map={line1: HandlerLine2D(numpoints=2)})
+    plt.ylabel('AUC score')
+    plt.xlabel(list(parameter.keys())[0])
+    plt.grid()
+
+############ Learning Curves 
+def plot_RandomForest_LC():
+    ## Random Forest
+    param1 = {'n_estimators':[1, 2, 4, 8, 16, 32, 64, 100, 200]}
+    param2 = {'max_depth':list(np.linspace(1,32,32,endpoint=True))}
+    param3 = {'min_samples_split':list(np.linspace(0.1, 1.0, 10, endpoint=True))}
+    param4 = {'min_samples_leaf':list( np.linspace(0.1, 0.5, 5, endpoint=True))}
+    param5 = {'max_features':list(range(1,features_final.shape[1]))}
+    learning_curve_parameters_RF(parameter=param1)
+    learning_curve_parameters_RF(parameter=param2)
+    learning_curve_parameters_RF(parameter=param3)
+    learning_curve_parameters_RF(parameter=param4)
+    learning_curve_parameters_RF(parameter=param5)
+
+def plot_AdaBoost_LC():
+    ## AdaBoost
+    param1 = {'n_estimators':[1, 2, 4, 8, 16, 32, 50, 64, 100, 120, 140, 160, 180, 200]}
+    # param2 = {'learning_rate':list(np.linspace(0.1,2,20,endpoint=True))}
+    learning_curve_parameters_AdaBoost(parameter=param1)
+    # learning_curve_parameters_AdaBoost(parameter=param2)
+
+
+# plot_AdaBoost_LC()
+
+
+test_AdaBoost()
+
+plt.show() 

@@ -45,17 +45,15 @@ def distribution(data,features,transformed= False):
 
 
 def evaluate(results, accuracy, f1):
-    '''
-        
-    '''
-
     fig , ax = plt.subplots(2,4, figsize=(11,7))
 
     bar_width = 0.3
     colors = ['#A00000','#00A0A0','#00A000']
 
     for k, learner in enumerate(results.keys()):
+        # print("k = {} and learner is {}".format(k, learner))
         for j, metric in enumerate(['train_time', 'acc_train', 'f_train', 'pred_time', 'acc_test', 'f_test']):
+            # print("j = {} and metric = {}".format(j, metric))
             for i in np.arange(3):
                 ax[j//3, j%3].bar(i+k*bar_width, results[learner][i][metric], width = bar_width, color = colors[k])
                 ax[j//3, j%3].set_xticks([0.45, 1.45, 2.45])
@@ -103,3 +101,4 @@ def evaluate(results, accuracy, f1):
     # Aesthetics
     plt.suptitle("Performance Metrics for Three Supervised Learning Models", fontsize = 16, y = 1.10)
     plt.tight_layout()   
+    fig.show()
