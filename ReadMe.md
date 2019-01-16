@@ -10,6 +10,7 @@
 | 6  | A Complete Tutorial on Ridge and Lasso Regression in Python |[Link](https://www.analyticsvidhya.com/blog/2016/01/complete-tutorial-ridge-lasso-regression-python/#one) | 
 | 7  | Ensemble Methods    | [Link](https://blog.statsbot.co/ensemble-learning-d1dcd548e936) |
 | 8  | Great Explanation Ensemble Methods (Error correlation ...) | [Link](http://flennerhag.com/2017-04-18-introduction-to-ensembles/) |
+| 9  | Visualizing machine learning one concept at a time Blog  |  [link](http://jalammar.github.io/) |
 
 
 **Great Python Modules Resources**
