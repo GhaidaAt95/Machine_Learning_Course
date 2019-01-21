@@ -99,6 +99,8 @@ features_log_transformed[skewed] = features_raw[skewed].apply(lambda x: np.log(x
 
 # Visualize the transformed data features
 vs.distribution(features_log_transformed,features=['capital-gain','capital-loss'],transformed=True)
+vs.distribution(features_log_transformed,features=['education-num','hours-per-week'],transformed=False)
+vs.distribution(features_log_transformed,features=['age'],transformed=False)
 
 ### Normalizing Numerical Features ###
 
@@ -402,6 +404,6 @@ def plot_AdaBoost_LC():
 # plot_AdaBoost_LC()
 
 
-test_AdaBoost()
+# test_AdaBoost()
 
 plt.show() 
